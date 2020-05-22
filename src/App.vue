@@ -18,7 +18,6 @@ export default {
 			loading: false
 		};
 	},
-	created() {},
 	mounted() {
 		this.fetchVerbs();
 	},
@@ -34,7 +33,6 @@ export default {
 				.catch(err => console.log(err))
 				.finally(() => {
 					this.loading = false;
-					console.log(this.loading);
 				});
 		}
 	}

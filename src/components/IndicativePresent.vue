@@ -8,20 +8,13 @@
 <script>
 export default {
 	data() {
-		return {
-			help: 'help'
-		};
+		return {};
 	},
 	props: {
 		verbs: Array,
 		loading: Boolean
 	},
-	methods: {
-		splitter() {
-			console.log(this.verbs);
-			return this.verbs[0][0];
-		}
-	},
+	methods: {},
 	computed: {}
 };
 </script>
