@@ -2,7 +2,7 @@
   <div>
     <div v-if="loading">Loading</div>
     <div v-else-if="verbs.length > 0">
-      <p>{{ randomVerb.spanishVerb }}</p>
+      <p>Conjugate {{ randomVerb.spanishVerb }} into {{ randomVerb.view }}</p>
       <p>{{ points }}</p>
     </div>
     <form id="inputForm">
@@ -32,13 +32,38 @@ export default {
   computed: {
     randomVerb() {
       if (this.verbs.length === 0) return [];
-      return this.verbs[0][Math.floor(Math.random() * this.verbs[0].length)];
+
+      let v = [];
+      let verb = this.verbs[0][
+        Math.floor(Math.random() * this.verbs[0].length)
+      ];
+
+      Object.keys(verb).forEach((item, index) => {
+        if (index > 4) {
+          v.push({ view: item, conjugation: verb[item] });
+        }
+      });
+
+      v = v[Math.floor(Math.random() * v.length)];
+      v["view"] = v["view"]
+        .split("")
+        .map((letter, index) => {
+          if (index === 0) {
+            return (letter = letter.toUpperCase());
+          } else if (letter.match(/[A-Z]/)) {
+            return (letter = " " + letter);
+          } else {
+            return letter;
+          }
+        })
+        .join("");
+      return { spanishVerb: verb.spanishVerb, ...v };
     }
   },
   methods: {
     submit: function(evt) {
       evt.preventDefault();
-      if (this.answer === this.randomVerb.firstPersonSingular) this.reRender();
+      if (this.answer === this.randomVerb.conjugation) this.reRender();
     }
   }
 };
