@@ -34,16 +34,19 @@ export default {
       if (this.verbs.length === 0) return [];
 
       let v = [];
+      //   Randomly selects a verb from the indicative present verbs
       let verb = this.verbs[0][
         Math.floor(Math.random() * this.verbs[0].length)
       ];
 
+      //creates a list of the 6 different points of view
       Object.keys(verb).forEach((item, index) => {
         if (index > 4) {
           v.push({ view: item, conjugation: verb[item] });
         }
       });
 
+      //randomly select a view and format it
       v = v[Math.floor(Math.random() * v.length)];
       v["view"] = v["view"]
         .split("")
@@ -57,6 +60,7 @@ export default {
           }
         })
         .join("");
+
       return { spanishVerb: verb.spanishVerb, ...v };
     }
   },
