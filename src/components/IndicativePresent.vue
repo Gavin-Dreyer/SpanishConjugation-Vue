@@ -2,6 +2,8 @@
   <div>
     <div v-if="loading">Loading</div>
     <div v-else-if="verbs.length > 0">
+      <p>Tense: {{randomVerb.tense}}</p>
+      <p>Mood: {{randomVerb.mood}}</p>
       <p>Conjugate {{ randomVerb.spanishVerb }} into {{ randomVerb.view }}</p>
       <p>{{ points }}</p>
     </div>
@@ -34,10 +36,9 @@ export default {
       if (this.verbs.length === 0) return [];
 
       let v = [];
+      console.log(this.verbs);
       //   Randomly selects a verb from the indicative present verbs
-      let verb = this.verbs[0][
-        Math.floor(Math.random() * this.verbs[0].length)
-      ];
+      let verb = this.verbs[Math.floor(Math.random() * this.verbs.length)];
 
       //creates a list of the 6 different points of view
       Object.keys(verb).forEach((item, index) => {
@@ -61,7 +62,12 @@ export default {
         })
         .join("");
 
-      return { spanishVerb: verb.spanishVerb, ...v };
+      return {
+        spanishVerb: verb.spanishVerb,
+        tense: verb.tense,
+        mood: verb.mood,
+        ...v
+      };
     }
   },
   methods: {

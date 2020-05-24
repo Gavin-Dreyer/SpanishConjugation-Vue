@@ -7,6 +7,16 @@
       :points="points"
       :key="componentKey"
     />
+
+    <input type="checkbox" id="present" value="Presente" v-model="checkedTenses" />
+    <label for="present">Present</label>
+    <input type="checkbox" id="past" value="Pretérito" v-model="checkedTenses" />
+    <label for="past">Past</label>
+    <input type="checkbox" id="imperfect" value="Imperfecto" v-model="checkedTenses" />
+    <label for="imperfect">Imperfect</label>
+    <input type="checkbox" id="future" value="Futuro" v-model="checkedTenses" />
+    <label for="future">Future</label>
+    <button v-on:click="fetchTenses">Fetch Selected Tenses</button>
   </div>
 </template>
 
@@ -21,6 +31,7 @@ export default {
   data() {
     return {
       verbs: [],
+      checkedTenses: [],
       loading: false,
       points: 0,
       componentKey: 0
@@ -36,7 +47,22 @@ export default {
       this.$http
         .get(baseURI)
         .then(result => {
-          this.verbs.push(result.data);
+          this.verbs = result.data;
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    fetchTenses: function() {
+      if (this.checkedTenses.length === 0) return;
+
+      this.loading = true;
+      const baseURI = "http://localhost:4444/api/tense/multiTense";
+      this.$http
+        .get(baseURI, { params: { tenses: this.checkedTenses } })
+        .then(result => {
+          this.verbs = result.data;
         })
         .catch(err => console.log(err))
         .finally(() => {
