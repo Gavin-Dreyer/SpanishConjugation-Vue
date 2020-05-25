@@ -166,35 +166,45 @@ export default {
 
 .answerInput {
 	font-size: 2rem;
+	border-radius: 2rem;
 }
 
 .answerInput:focus {
 	outline: none;
 }
 
+.answerInput[type='text'] {
+	padding: 2.5% 5%;
+}
+
 .answerInputCorrect {
 	border: 3px solid lightgreen;
 	font-size: 2rem;
+	border-radius: 2rem;
 	animation: moveUp 0.5s;
 }
 
 .answerInputIncorrect {
 	border: 3px solid rgb(235, 136, 136);
 	font-size: 2rem;
+	border-radius: 2rem;
 	animation: shake 0.5s;
-	/* animation: mymove 0.5s; */
 }
 
 .answerInputCorrect:focus {
-	border: 3px solid lightgreen;
-	font-size: 2rem;
 	outline: none;
 }
 
 .answerInputIncorrect:focus {
-	border: 3px solid rgb(235, 136, 136);
-	font-size: 2rem;
 	outline: none;
+}
+
+.answerInputCorrect[type='text'] {
+	padding: 2.5% 5%;
+}
+
+.answerInputIncorrect[type='text'] {
+	padding: 2.5% 5%;
 }
 
 @keyframes shake {
