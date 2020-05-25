@@ -49,7 +49,6 @@ export default {
 				return acc;
 			}, {});
 
-			console.log(verb);
 			return verb;
 		}
 	},

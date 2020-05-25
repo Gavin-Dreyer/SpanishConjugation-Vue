@@ -13,7 +13,13 @@
 		</div>
 		<form id="inputForm">
 			<p>
-				<input ref="answer" type="text" placeholder="Answer" v-model="answer" />
+				<input
+					:class="answerInputClass"
+					ref="answer"
+					type="text"
+					placeholder="Answer"
+					v-model="answer"
+				/>
 			</p>
 			<button v-on:click="submit">Submit</button>
 		</form>
@@ -71,6 +77,7 @@ export default {
 	data() {
 		return {
 			answer: '',
+			answerInputClass: 'answerInput',
 			checkedTenses: []
 		};
 	},
@@ -122,8 +129,27 @@ export default {
 		submit: function(evt) {
 			evt.preventDefault();
 			this.$refs.answer.focus();
-			if (this.answer === this.randomVerb.conjugation)
-				this.reRender(), this.$store.commit(INCREMENT);
+			if (this.answer === this.randomVerb.conjugation) {
+				this.$store.commit(INCREMENT);
+				this.answerInputOutCome(true);
+
+				setTimeout(() => {
+					this.reRender();
+				}, 1000);
+			} else {
+				this.answerInputOutCome(false);
+			}
+		},
+		answerInputOutCome(bool) {
+			if (bool) {
+				this.answerInputClass = 'answerInputCorrect';
+			} else {
+				this.answerInputClass = 'answerInputIncorrect';
+
+				setTimeout(() => {
+					this.answerInputClass = 'answerInput';
+				}, 1000);
+			}
 		}
 	}
 };
@@ -137,6 +163,76 @@ export default {
 	font-weight: 700;
 	font-size: 1.25rem;
 }
+
+.answerInput {
+	font-size: 2rem;
+}
+
+.answerInput:focus {
+	outline: none;
+}
+
+.answerInputCorrect {
+	border: 3px solid lightgreen;
+	font-size: 2rem;
+	animation: moveUp 0.5s;
+}
+
+.answerInputIncorrect {
+	border: 3px solid rgb(235, 136, 136);
+	font-size: 2rem;
+	animation: shake 0.5s;
+	/* animation: mymove 0.5s; */
+}
+
+.answerInputCorrect:focus {
+	border: 3px solid lightgreen;
+	font-size: 2rem;
+	outline: none;
+}
+
+.answerInputIncorrect:focus {
+	border: 3px solid rgb(235, 136, 136);
+	font-size: 2rem;
+	outline: none;
+}
+
+@keyframes shake {
+	0% {
+		transform: translate(3px, 0px);
+	}
+	10% {
+		transform: translate(-3px, 0px);
+	}
+	20% {
+		transform: translate(3px, 0px);
+	}
+	30% {
+		transform: translate(-3px, 0px);
+	}
+	40% {
+		transform: translate(0px, 0px);
+	}
+}
+
+@keyframes moveUp {
+	0% {
+		transform: translate(0px, 0px);
+	}
+	10% {
+		transform: translate(0px, -5px);
+	}
+	20% {
+		transform: translate(0px, -10px);
+	}
+	30% {
+		transform: translate(0px, -5px);
+	}
+	40% {
+		transform: translate(0px, 0px);
+	}
+}
+
 .tensesCheckbox {
 	display: flex;
 	flex-direction: column;
