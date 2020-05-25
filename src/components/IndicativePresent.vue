@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div v-if="loading">Loading</div>
-		<div v-else-if="verbs.length > 0">
+		<div v-if="this.$store.state.loading">Loading</div>
+		<div v-else-if="this.$store.state.verbs.length > 0">
 			<p>
 				Conjugate
 				<span id="spanishVerb">{{ randomVerb.spanishVerb }}</span>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { INCREMENT } from '../mutation-types';
 export default {
 	data() {
 		return {
@@ -28,8 +29,6 @@ export default {
 		};
 	},
 	props: {
-		verbs: Array,
-		loading: Boolean,
 		points: Number,
 		reRender: Function
 	},
@@ -39,20 +38,18 @@ export default {
 	},
 	computed: {
 		randomVerb() {
-			if (this.verbs.length === 0) return [];
-
+			if (this.$store.state.verbs === 0) return [];
 			let v = [];
-
 			//   Randomly selects a verb from the indicative present verbs
-			let verb = this.verbs[Math.floor(Math.random() * this.verbs.length)];
-
+			let verb = this.$store.state.verbs[
+				Math.floor(Math.random() * this.$store.state.verbs.length)
+			];
 			//creates a list of the 6 different points of view
 			Object.keys(verb).forEach((item, index) => {
 				if (index > 4) {
 					v.push({ view: item, conjugation: verb[item] });
 				}
 			});
-
 			//randomly select a view and format it
 			v = v[Math.floor(Math.random() * v.length)];
 			v['view'] = v['view']
@@ -67,7 +64,6 @@ export default {
 					}
 				})
 				.join('');
-
 			return {
 				spanishVerb: verb.spanishVerb,
 				tense: verb.tense,
@@ -81,7 +77,7 @@ export default {
 			evt.preventDefault();
 			this.$refs.answer.focus();
 			if (this.answer === this.randomVerb.conjugation)
-				this.$store.commit('increment'), this.reRender();
+				this.reRender(), this.$store.commit(INCREMENT);
 		}
 	}
 };

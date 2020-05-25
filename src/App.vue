@@ -45,13 +45,16 @@
 					<label for="future">Future</label>
 				</div>
 			</div>
-			<button v-on:click="fetchTenses">Fetch Selected Tenses</button>
+			<button v-on:click="fetchTenses({ checkedTenses })">
+				Fetch Selected Tenses
+			</button>
 		</div>
 	</div>
 </template>
 
 <script>
 import IndicativePresent from './components/IndicativePresent.vue';
+import { mapActions } from 'vuex';
 
 export default {
 	name: 'App',
@@ -67,37 +70,10 @@ export default {
 		};
 	},
 	mounted() {
-		this.fetchVerbs();
+		this.$store.dispatch('fetchVerbs');
 	},
 	methods: {
-		fetchVerbs: function() {
-			this.loading = true;
-			const baseURI = 'http://localhost:4444/api/tense/indicativePresent';
-			this.$http
-				.get(baseURI)
-				.then(result => {
-					this.verbs = result.data;
-				})
-				.catch(err => console.log(err))
-				.finally(() => {
-					this.loading = false;
-				});
-		},
-		fetchTenses: function() {
-			if (this.checkedTenses.length === 0) return;
-
-			this.loading = true;
-			const baseURI = 'http://localhost:4444/api/tense/multiTense';
-			this.$http
-				.get(baseURI, { params: { tenses: this.checkedTenses } })
-				.then(result => {
-					this.verbs = result.data;
-				})
-				.catch(err => console.log(err))
-				.finally(() => {
-					this.loading = false;
-				});
-		},
+		...mapActions(['fetchTenses']),
 		reRender: function() {
 			this.componentKey++;
 		}
