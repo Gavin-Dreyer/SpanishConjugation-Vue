@@ -4,7 +4,6 @@
 			v-bind:verbs="verbs"
 			:loading="loading"
 			:reRender="this.reRender"
-			:points="points"
 			:key="componentKey"
 		/>
 		<div class="tensesCheckbox">
@@ -64,12 +63,10 @@ export default {
 			verbs: [],
 			checkedTenses: [],
 			loading: false,
-			points: 0,
 			componentKey: 0
 		};
 	},
 	mounted() {
-		console.log();
 		this.fetchVerbs();
 	},
 	methods: {
@@ -103,7 +100,6 @@ export default {
 		},
 		reRender: function() {
 			this.componentKey++;
-			this.points++;
 		}
 	}
 };

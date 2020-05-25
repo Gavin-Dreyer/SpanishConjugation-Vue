@@ -9,7 +9,7 @@
 			</p>
 			<p>Tense: {{ randomVerb.tense }}</p>
 			<p>Mood: {{ randomVerb.mood }}</p>
-			<p>{{ points }}</p>
+			<p>{{ this.$store.state.points }}</p>
 		</div>
 		<form id="inputForm">
 			<p>
@@ -80,7 +80,8 @@ export default {
 		submit: function(evt) {
 			evt.preventDefault();
 			this.$refs.answer.focus();
-			if (this.answer === this.randomVerb.conjugation) this.reRender();
+			if (this.answer === this.randomVerb.conjugation)
+				this.$store.commit('increment'), this.reRender();
 		}
 	}
 };
