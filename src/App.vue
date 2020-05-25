@@ -1,11 +1,6 @@
 <template>
 	<div id="app">
-		<IndicativePresent
-			v-bind:verbs="verbs"
-			:loading="loading"
-			:reRender="this.reRender"
-			:key="componentKey"
-		/>
+		<IndicativePresent v-bind:reRender="this.reRender" :key="componentKey" />
 		<div class="tensesCheckbox">
 			<div class="checkBoxCon">
 				<div class="checkBoxes">
@@ -63,9 +58,7 @@ export default {
 	},
 	data() {
 		return {
-			verbs: [],
 			checkedTenses: [],
-			loading: false,
 			componentKey: 0
 		};
 	},
