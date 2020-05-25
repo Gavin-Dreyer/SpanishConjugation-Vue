@@ -1,6 +1,7 @@
 <template>
 	<div id="app">
-		<Conjugation v-bind:reRender="this.reRender" :key="componentKey" />
+		<!-- <Conjugation v-bind:reRender="this.reRender" :key="componentKey" /> -->
+		<Definition v-bind:reRender="this.reRender" :key="componentKey" />
 		<div class="tensesCheckbox">
 			<div class="checkBoxCon">
 				<div class="checkBoxes">
@@ -48,13 +49,15 @@
 </template>
 
 <script>
-import Conjugation from './components/Conjugation.vue';
+// import Conjugation from './components/Conjugation.vue';
+import Definition from './components/Definition.vue';
 import { mapActions } from 'vuex';
 
 export default {
 	name: 'App',
 	components: {
-		Conjugation
+		// Conjugation,
+		Definition
 	},
 	data() {
 		return {

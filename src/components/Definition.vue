@@ -3,12 +3,9 @@
 		<div v-if="this.$store.state.loading">Loading</div>
 		<div v-else-if="this.$store.state.verbs.length > 0">
 			<p>
-				Conjugate
-				<span id="spanishVerb">{{ randomVerb.spanishVerb }}</span>
-				into {{ randomVerb.view }}
+				Translate
+				<span id="spanishVerb">{{ randomVerb.englishDefinition }}</span>
 			</p>
-			<p>Tense: {{ randomVerb.tense }}</p>
-			<p>Mood: {{ randomVerb.mood }}</p>
 			<p>{{ this.$store.state.points }}</p>
 		</div>
 		<form id="inputForm">
@@ -38,44 +35,29 @@ export default {
 	computed: {
 		randomVerb() {
 			if (this.$store.state.verbs === 0) return [];
-			let v = [];
+
 			//   Randomly selects a verb from the indicative present verbs
 			let verb = this.$store.state.verbs[
 				Math.floor(Math.random() * this.$store.state.verbs.length)
 			];
-			//creates a list of the 6 different points of view
-			Object.keys(verb).forEach((item, index) => {
-				if (index > 4) {
-					v.push({ view: item, conjugation: verb[item] });
+
+			verb = Object.keys(verb).reduce((acc, item) => {
+				if (item === 'englishDefinition' || item === 'spanishVerb') {
+					acc = { ...acc, [item]: verb[item] };
 				}
-			});
-			//randomly select a view and format it
-			v = v[Math.floor(Math.random() * v.length)];
-			v['view'] = v['view']
-				.split('')
-				.map((letter, index) => {
-					if (index === 0) {
-						return (letter = letter.toUpperCase());
-					} else if (letter.match(/[A-Z]/)) {
-						return (letter = ' ' + letter);
-					} else {
-						return letter;
-					}
-				})
-				.join('');
-			return {
-				spanishVerb: verb.spanishVerb,
-				tense: verb.tense,
-				mood: verb.mood,
-				...v
-			};
+
+				return acc;
+			}, {});
+
+			console.log(verb);
+			return verb;
 		}
 	},
 	methods: {
 		submit: function(evt) {
 			evt.preventDefault();
 			this.$refs.answer.focus();
-			if (this.answer === this.randomVerb.conjugation)
+			if (this.answer === this.randomVerb.spanishVerb)
 				this.reRender(), this.$store.commit(INCREMENT);
 		}
 	}
