@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<IndicativePresent v-bind:reRender="this.reRender" :key="componentKey" />
+		<Conjugation v-bind:reRender="this.reRender" :key="componentKey" />
 		<div class="tensesCheckbox">
 			<div class="checkBoxCon">
 				<div class="checkBoxes">
@@ -48,13 +48,13 @@
 </template>
 
 <script>
-import IndicativePresent from './components/IndicativePresent.vue';
+import Conjugation from './components/Conjugation.vue';
 import { mapActions } from 'vuex';
 
 export default {
 	name: 'App',
 	components: {
-		IndicativePresent
+		Conjugation
 	},
 	data() {
 		return {
