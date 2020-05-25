@@ -13,7 +13,7 @@
 		</div>
 		<form id="inputForm">
 			<p>
-				<input type="text" placeholder="Answer" v-model="answer" />
+				<input ref="answer" type="text" placeholder="Answer" v-model="answer" />
 			</p>
 			<button v-on:click="submit">Submit</button>
 		</form>
@@ -34,7 +34,9 @@ export default {
 		reRender: Function
 	},
 	created() {},
-	mounted() {},
+	mounted() {
+		this.$refs.answer.focus();
+	},
 	computed: {
 		randomVerb() {
 			if (this.verbs.length === 0) return [];
@@ -77,6 +79,7 @@ export default {
 	methods: {
 		submit: function(evt) {
 			evt.preventDefault();
+			this.$refs.answer.focus();
 			if (this.answer === this.randomVerb.conjugation) this.reRender();
 		}
 	}
