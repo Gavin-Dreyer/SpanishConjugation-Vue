@@ -7,7 +7,7 @@
 				<button v-on:click="helpUser">No</button>
 			</div>
 		</div>
-		<div id="helpVerb" v-if="help">{{ randomVerb.conjugation }}</div>
+		<div id="helpVerb" v-if="help">{{ checkParent }}</div>
 	</div>
 </template>
 
@@ -27,10 +27,16 @@ export default {
 		attemps: Number
 	},
 	computed: {
-		randomVerb() {
-			return this.$store.getters.randomVerb;
+		checkParent() {
+			if (this.$parent.$options._componentTag === 'Definition') {
+				return this.$store.getters.randomVerbDef.spanishVerb;
+			} else if (this.$parent.$options._componentTag === 'Conjugation') {
+				return this.$store.getters.randomVerbConj.conjugation;
+			}
+			return null;
 		}
 	},
+	created() {},
 	methods: {
 		helpUser() {
 			this.helpCon = 'helpConFadeOut';

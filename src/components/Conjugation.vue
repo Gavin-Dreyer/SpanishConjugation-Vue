@@ -80,7 +80,7 @@
 <script>
 import { INCREMENT } from '../mutation-types';
 import { mapActions } from 'vuex';
-import Help from './Conjugation/Help';
+import Help from './Help';
 export default {
 	components: {
 		Help
@@ -106,7 +106,7 @@ export default {
 	},
 	computed: {
 		randomVerb() {
-			return this.$store.getters.randomVerb;
+			return this.$store.getters.randomVerbConj;
 		}
 	},
 	methods: {
@@ -118,7 +118,7 @@ export default {
 			evt.preventDefault();
 			this.$refs.answer.focus();
 			if (this.answer === this.randomVerb.conjugation) {
-				this.$store.commit(INCREMENT, { verbID: this.randomVerb.id });
+				this.$store.commit(INCREMENT, { verbId: this.randomVerb.id });
 				this.answerInputOutCome(true);
 				setTimeout(() => {
 					this.reRender();

@@ -27,7 +27,7 @@ const store = new Vuex.Store({
 		[INCREMENT](state, rVerb) {
 			state.points++;
 			state.verbs = state.verbs.filter(verb => {
-				if (verb.id !== rVerb.verbID) {
+				if (verb.id !== rVerb.verbId) {
 					return verb;
 				}
 			});
@@ -49,7 +49,7 @@ const store = new Vuex.Store({
 		}
 	},
 	getters: {
-		randomVerb: state => {
+		randomVerbConj: state => {
 			if (state.verbs === 0) return [];
 			let v = [];
 			//   Randomly selects a verb from the indicative present verbs
@@ -80,6 +80,22 @@ const store = new Vuex.Store({
 				mood: verb.mood,
 				...v
 			};
+		},
+		randomVerbDef(state) {
+			if (state.verbs === 0) return [];
+
+			//   Randomly selects a verb from the indicative present verbs
+			let verb = state.verbs[Math.floor(Math.random() * state.verbs.length)];
+
+			verb = Object.keys(verb).reduce((acc, item) => {
+				if (item === 'englishDefinition' || item === 'spanishVerb') {
+					acc = { ...acc, [item]: verb[item] };
+				}
+
+				return acc;
+			}, {});
+
+			return verb;
 		}
 	},
 	actions: {
