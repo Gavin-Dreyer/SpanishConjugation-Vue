@@ -118,18 +118,18 @@ export default {
 			evt.preventDefault();
 			this.$refs.answer.focus();
 			if (this.answer === this.randomVerb.conjugation) {
-				this.$store.commit(INCREMENT);
+				this.$store.commit(INCREMENT, { verbID: this.randomVerb.id });
 				this.answerInputOutCome(true);
 				setTimeout(() => {
 					this.reRender();
-				}, 1000);
+				}, 750);
 			} else {
 				this.answerInputOutCome(false);
+				this.reRenderHelp();
 				this.attemps++;
 				this.displayHelp = true;
 				this.help = false;
 				this.helpCon = 'helpCon';
-				this.reRenderHelp();
 			}
 		},
 		answerInputOutCome(bool) {

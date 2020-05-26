@@ -24,8 +24,13 @@ const store = new Vuex.Store({
 		error: ''
 	},
 	mutations: {
-		[INCREMENT](state) {
+		[INCREMENT](state, rVerb) {
 			state.points++;
+			state.verbs = state.verbs.filter(verb => {
+				if (verb.id !== rVerb.verbID) {
+					return verb;
+				}
+			});
 		},
 		[FETCHING_VERBS](state) {
 			state.loading = true;
@@ -52,7 +57,7 @@ const store = new Vuex.Store({
 			//creates a list of the 6 different points of view
 			Object.keys(verb).forEach((item, index) => {
 				if (index > 4) {
-					v.push({ view: item, conjugation: verb[item] });
+					v.push({ view: item, conjugation: verb[item], id: verb['id'] });
 				}
 			});
 			//randomly select a view and format it
