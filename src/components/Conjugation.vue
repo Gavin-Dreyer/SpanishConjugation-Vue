@@ -66,36 +66,35 @@
 				Fetch Selected Tenses
 			</button>
 		</div>
-		<div
-			:class="helpCon"
-			v-if="attemps % 3 === 0 && attemps > 0 && displayHelp"
-		>
-			<div class="topHelpCon">
-				<p>Do you want help?</p>
-				<div class="helpConBtns">
-					<button v-on:click="help = true">Yes</button>
-					<button v-on:click="helpUser">No</button>
-				</div>
-			</div>
-			<div id="helpVerb" v-if="help">{{ this.randomVerb.conjugation }}</div>
-		</div>
+
+		<Help
+			:attemps="attemps"
+			:displayHelpProp="displayHelpProp"
+			:helpConProp="helpConProp"
+			:helpProp="helpProp"
+			:key="componentKeyHelp"
+		/>
 	</div>
 </template>
 
 <script>
 import { INCREMENT } from '../mutation-types';
 import { mapActions } from 'vuex';
-
+import Help from './Conjugation/Help';
 export default {
+	components: {
+		Help
+	},
 	data() {
 		return {
+			componentKeyHelp: 0,
 			answer: '',
 			answerInputClass: 'answerInput',
-			helpCon: 'helpCon',
+			helpConProp: 'helpCon',
 			checkedTenses: [],
 			attemps: 0,
-			help: false,
-			displayHelp: true
+			helpProp: false,
+			displayHelpProp: true
 		};
 	},
 	props: {
@@ -107,49 +106,20 @@ export default {
 	},
 	computed: {
 		randomVerb() {
-			if (this.$store.state.verbs === 0) return [];
-			let v = [];
-			//   Randomly selects a verb from the indicative present verbs
-			let verb = this.$store.state.verbs[
-				Math.floor(Math.random() * this.$store.state.verbs.length)
-			];
-			//creates a list of the 6 different points of view
-			Object.keys(verb).forEach((item, index) => {
-				if (index > 4) {
-					v.push({ view: item, conjugation: verb[item] });
-				}
-			});
-			//randomly select a view and format it
-			v = v[Math.floor(Math.random() * v.length)];
-			v['view'] = v['view']
-				.split('')
-				.map((letter, index) => {
-					if (index === 0) {
-						return (letter = letter.toUpperCase());
-					} else if (letter.match(/[A-Z]/)) {
-						return (letter = ' ' + letter);
-					} else {
-						return letter;
-					}
-				})
-				.join('');
-			return {
-				spanishVerb: verb.spanishVerb,
-				tense: verb.tense,
-				mood: verb.mood,
-				...v
-			};
+			return this.$store.getters.randomVerb;
 		}
 	},
 	methods: {
 		...mapActions(['fetchTenses']),
+		reRenderHelp() {
+			this.componentKeyHelp++;
+		},
 		submit: function(evt) {
 			evt.preventDefault();
 			this.$refs.answer.focus();
 			if (this.answer === this.randomVerb.conjugation) {
 				this.$store.commit(INCREMENT);
 				this.answerInputOutCome(true);
-
 				setTimeout(() => {
 					this.reRender();
 				}, 1000);
@@ -159,6 +129,7 @@ export default {
 				this.displayHelp = true;
 				this.help = false;
 				this.helpCon = 'helpCon';
+				this.reRenderHelp();
 			}
 		},
 		answerInputOutCome(bool) {
@@ -166,18 +137,10 @@ export default {
 				this.answerInputClass = 'answerInputCorrect';
 			} else {
 				this.answerInputClass = 'answerInputIncorrect';
-
 				setTimeout(() => {
 					this.answerInputClass = 'answerInput';
 				}, 1000);
 			}
-		},
-		helpUser() {
-			this.helpCon = 'helpConFadeOut';
-			setTimeout(() => {
-				this.displayHelp = false;
-			}, 900);
-			return;
 		}
 	}
 };
@@ -191,50 +154,40 @@ export default {
 	font-weight: 700;
 	font-size: 1.5rem;
 }
-
 .answerInput {
 	font-size: 2rem;
 	border-radius: 2rem;
 }
-
 .answerInput:focus {
 	outline: none;
 }
-
 .answerInput[type='text'] {
 	padding: 2.5% 5%;
 }
-
 .answerInputCorrect {
 	border: 3px solid lightgreen;
 	font-size: 2rem;
 	border-radius: 2rem;
 	animation: moveUp 0.5s;
 }
-
 .answerInputIncorrect {
 	border: 3px solid rgb(235, 136, 136);
 	font-size: 2rem;
 	border-radius: 2rem;
 	animation: shake 0.5s;
 }
-
 .answerInputCorrect:focus {
 	outline: none;
 }
-
 .answerInputIncorrect:focus {
 	outline: none;
 }
-
 .answerInputCorrect[type='text'] {
 	padding: 2.5% 5%;
 }
-
 .answerInputIncorrect[type='text'] {
 	padding: 2.5% 5%;
 }
-
 .tensesCheckbox {
 	display: flex;
 	flex-direction: column;
@@ -243,74 +196,13 @@ export default {
 	width: 100%;
 	height: 20%;
 }
-
 .checkBoxCon {
 	display: flex;
 	justify-content: space-around;
 	width: 100%;
 }
-
 .checkBoxes label {
 	margin-left: 0.1rem;
-}
-
-.helpCon {
-	height: 30%;
-	border: 1px solid black;
-	animation: fadeIn ease 1s;
-}
-
-.helpCon p {
-	font-size: 1.25rem;
-}
-
-.helpConFadeOut {
-	height: 30%;
-	border: 1px solid black;
-	animation: fadeOut ease 1s;
-}
-
-.helpConFadeOut p {
-	font-size: 1.25rem;
-}
-
-.topHelpCon {
-	height: 70%;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-}
-
-.helpConBtns {
-	display: flex;
-	justify-content: space-evenly;
-}
-
-.helpConBtns button {
-	font-size: 1.25rem;
-	width: 25%;
-	border: 1px solid black;
-	border-radius: 5%;
-}
-
-.helpConBtns button:focus {
-	outline: none;
-}
-
-.helpConBtns button:hover {
-	background-color: black;
-	color: white;
-	transition: background-color 0.25s;
-}
-
-#helpVerb {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 30%;
-	animation: fadeIn ease 1s;
-	font-size: 2rem;
-	font-weight: 700;
 }
 
 @keyframes shake {
@@ -330,7 +222,6 @@ export default {
 		transform: translate(0px, 0px);
 	}
 }
-
 @keyframes moveUp {
 	0% {
 		transform: translate(0px, 0px);
@@ -346,24 +237,6 @@ export default {
 	}
 	40% {
 		transform: translate(0px, 0px);
-	}
-}
-
-@keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
-@keyframes fadeOut {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
 	}
 }
 </style>

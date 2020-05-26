@@ -43,6 +43,40 @@ const store = new Vuex.Store({
 			state.error = 'No tenses selected';
 		}
 	},
+	getters: {
+		randomVerb: state => {
+			if (state.verbs === 0) return [];
+			let v = [];
+			//   Randomly selects a verb from the indicative present verbs
+			let verb = state.verbs[Math.floor(Math.random() * state.verbs.length)];
+			//creates a list of the 6 different points of view
+			Object.keys(verb).forEach((item, index) => {
+				if (index > 4) {
+					v.push({ view: item, conjugation: verb[item] });
+				}
+			});
+			//randomly select a view and format it
+			v = v[Math.floor(Math.random() * v.length)];
+			v['view'] = v['view']
+				.split('')
+				.map((letter, index) => {
+					if (index === 0) {
+						return (letter = letter.toUpperCase());
+					} else if (letter.match(/[A-Z]/)) {
+						return (letter = ' ' + letter);
+					} else {
+						return letter;
+					}
+				})
+				.join('');
+			return {
+				spanishVerb: verb.spanishVerb,
+				tense: verb.tense,
+				mood: verb.mood,
+				...v
+			};
+		}
+	},
 	actions: {
 		fetchVerbs({ commit }) {
 			commit(FETCHING_VERBS);
