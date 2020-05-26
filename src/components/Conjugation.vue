@@ -66,6 +66,19 @@
 				Fetch Selected Tenses
 			</button>
 		</div>
+		<div
+			:class="helpCon"
+			v-if="attemps % 3 === 0 && attemps > 0 && displayHelp"
+		>
+			<div class="topHelpCon">
+				<p>Do you want help?</p>
+				<div class="helpConBtns">
+					<button v-on:click="help = true">Yes</button>
+					<button v-on:click="helpUser">No</button>
+				</div>
+			</div>
+			<div id="helpVerb" v-if="help">{{ this.randomVerb.conjugation }}</div>
+		</div>
 	</div>
 </template>
 
@@ -78,7 +91,11 @@ export default {
 		return {
 			answer: '',
 			answerInputClass: 'answerInput',
-			checkedTenses: []
+			helpCon: 'helpCon',
+			checkedTenses: [],
+			attemps: 0,
+			help: false,
+			displayHelp: true
 		};
 	},
 	props: {
@@ -138,6 +155,10 @@ export default {
 				}, 1000);
 			} else {
 				this.answerInputOutCome(false);
+				this.attemps++;
+				this.displayHelp = true;
+				this.help = false;
+				this.helpCon = 'helpCon';
 			}
 		},
 		answerInputOutCome(bool) {
@@ -150,6 +171,13 @@ export default {
 					this.answerInputClass = 'answerInput';
 				}, 1000);
 			}
+		},
+		helpUser() {
+			this.helpCon = 'helpConFadeOut';
+			setTimeout(() => {
+				this.displayHelp = false;
+			}, 900);
+			return;
 		}
 	}
 };
@@ -161,7 +189,7 @@ export default {
 }
 #spanishVerb {
 	font-weight: 700;
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 }
 
 .answerInput {
@@ -207,6 +235,84 @@ export default {
 	padding: 2.5% 5%;
 }
 
+.tensesCheckbox {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+	height: 20%;
+}
+
+.checkBoxCon {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+}
+
+.checkBoxes label {
+	margin-left: 0.1rem;
+}
+
+.helpCon {
+	height: 30%;
+	border: 1px solid black;
+	animation: fadeIn ease 1s;
+}
+
+.helpCon p {
+	font-size: 1.25rem;
+}
+
+.helpConFadeOut {
+	height: 30%;
+	border: 1px solid black;
+	animation: fadeOut ease 1s;
+}
+
+.helpConFadeOut p {
+	font-size: 1.25rem;
+}
+
+.topHelpCon {
+	height: 70%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+.helpConBtns {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.helpConBtns button {
+	font-size: 1.25rem;
+	width: 25%;
+	border: 1px solid black;
+	border-radius: 5%;
+}
+
+.helpConBtns button:focus {
+	outline: none;
+}
+
+.helpConBtns button:hover {
+	background-color: black;
+	color: white;
+	transition: background-color 0.25s;
+}
+
+#helpVerb {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 30%;
+	animation: fadeIn ease 1s;
+	font-size: 2rem;
+	font-weight: 700;
+}
+
 @keyframes shake {
 	0% {
 		transform: translate(3px, 0px);
@@ -243,22 +349,21 @@ export default {
 	}
 }
 
-.tensesCheckbox {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	align-items: center;
-	width: 100%;
-	height: 20%;
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
-.checkBoxCon {
-	display: flex;
-	justify-content: space-around;
-	width: 100%;
-}
-
-.checkBoxes label {
-	margin-left: 0.1rem;
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
 }
 </style>
